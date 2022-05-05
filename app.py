@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 import config
 from apps.book import bp as book_bp
 from apps.course import bp as course_bp
@@ -10,6 +11,7 @@ app.register_blueprint(book_bp)
 app.register_blueprint(course_bp)
 app.register_blueprint(user_bp)
 
+db = SQLAlchemy(app)
 
 @app.route('/helloworld')
 def hello_world():
@@ -20,6 +22,13 @@ def hello_world():
 
 @app.route('/')
 def index():
+    # 测试数据库连接
+    engine = db.get_engine()
+    # conn = engine.connect()
+    # conn.close()
+    with engine.connect() as conn:
+        result = conn.execute('select 1')
+        print(result.fetchone())
     return render_template('index.html')
 
 
