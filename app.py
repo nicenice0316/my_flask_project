@@ -64,13 +64,14 @@ def hello_world():
 @app.route('/')
 def index():
     # 测试数据库连接
-    engine = db.get_engine()
+    # engine = db.get_engine()
     # conn = engine.connect()
     # conn.close()
-    with engine.connect() as conn:
-        result = conn.execute('select 1')
-        print(result.fetchone())
-    return render_template('index.html')
+    # with engine.connect() as conn:
+    #     result = conn.execute('select 1')
+    #     print(result.fetchone())
+    # return render_template('index.html')
+    return render_template('login.html')
 
 
 @app.route('/about')
