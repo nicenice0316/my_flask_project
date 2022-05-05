@@ -5,3 +5,6 @@
 修改
 2. 通过`render_template`来渲染模板
 3. 变量传递到模板中`context = {'username': 'alex'} return render_template('about.html', **context)`
+
+## 二、ORM
+1.  模型创建完成之后，使用`db.create_all()`来生成数据库表
