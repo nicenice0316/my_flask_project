@@ -15,15 +15,60 @@ app.register_blueprint(user_bp)
 db = SQLAlchemy(app)
 
 
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(200), nullable=False)
+
+
+class UserExtension(db.Model):
+    __tablename__ = 'user_extension'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    school = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # userlist=False，代表反向引用的时候，不是一个礼拜，而是一个对象
+    user = db.relationship('User', backref=db.backref('extension', uselist=False))
+
+
 # 定义ORM模型
 class Article(db.Model):
     __tablename__ = 'article'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # 1、 第一个参数是模型名字，必须要和模型的名字保持一致
+    # 2、 backref，代表反向引用，代表对方访问我的时候的名字
+    author = db.relationship('User', backref='articles')
 
 
+# db.drop_all()
 # db.create_all()
+
+
+@app.route('/otm')
+def one_to_many():
+    now = datetime.datetime.now().strftime('%Y:%m:%d_%H:%M:%S')
+    article = Article(title='这是第一个文章', content='打印一下时间吧 ' + now)
+    user = User(username='Jack')
+    article.author = user
+    # user数据会自动添加
+    db.session.add(article)
+    db.session.commit()
+    print(user.articles)
+    return 'one to many 数据操作成功'
+
+
+@app.route('/oto')
+def one_to_one():
+    # user = User.query.filter_by(id=1).first
+    user = User(username='Jack')
+    extension = UserExtension(school='清华大学')
+    user.extension = extension
+    db.session.add(user)
+    db.session.commit()
+    return 'one to one 数据操作成功'
+
 
 @app.route('/article')
 def article_view():
