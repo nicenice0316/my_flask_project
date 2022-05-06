@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import config
 from apps.book import bp as book_bp
 from apps.course import bp as course_bp
@@ -14,11 +15,14 @@ app.register_blueprint(user_bp)
 
 db = SQLAlchemy(app)
 
+migrate = Migrate(app, db)
+
 
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
 
 class UserExtension(db.Model):

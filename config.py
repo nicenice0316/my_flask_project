@@ -4,7 +4,7 @@ DEBUG = True
 # 数据库配置
 HOSTNAME = '127.0.0.1'
 PORT = '3306'
-DATABASE = 'my_db'
+DATABASE = 'my_flask_db'
 USERNAME = 'root'
 PASSWORD = '123456'
 DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(USERNAME, PASSWORD, HOSTNAME, PORT, DATABASE)
