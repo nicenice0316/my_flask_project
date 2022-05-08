@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for
+from flask import Response, request, session
 from flask_migrate import Migrate
 from models import Article, User, UserExtension
 import config
@@ -7,6 +8,7 @@ from apps.course import bp as course_bp
 from apps.user import bp as user_bp
 import datetime
 from exts import db
+from forms import LoginForm
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -18,13 +20,6 @@ app.register_blueprint(user_bp)
 # 把app绑定到db上
 db.init_app(app)
 migrate = Migrate(app, db)
-
-
-
-
-
-# db.drop_all()
-# db.create_all()
 
 
 @app.route('/otm')
@@ -96,8 +91,8 @@ def index():
     # with engine.connect() as conn:
     #     result = conn.execute('select 1')
     #     print(result.fetchone())
-    # return render_template('index.html')
-    return render_template('login.html')
+    return render_template('index.html')
+    # return render_template('login.html')
 
 
 @app.route('/about')
@@ -115,6 +110,43 @@ def control():
                'books': ['红楼梦', '西游记', '水浒传', '三国演义'],
                'person': {'name': 'jack', 'age': 18}}
     return render_template('control.html', **context)
+
+
+@app.route('/set_cookie')
+def set_cookie():
+    response = Response('cookie 设置')
+    response.set_cookie('user_id', '123')
+    return response
+
+
+@app.route('/get_cookie')
+def get_cookie():
+    user_id = request.cookies.get('user_id')
+    return '获取cookie, user id {}'.format(user_id)
+
+
+@app.route('/set_session')
+def set_session():
+    session['username'] = 'ava'
+    return 'session设置成功'
+
+
+@app.route('/get_session')
+def get_session():
+    username = session['username']
+    return '获取session中的username {}'.format(username)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login_new.html')
+    else:
+        form = LoginForm(request.form)
+        if form.validate():
+            return '登录成功'
+        else:
+            return '邮箱或密码错误'
 
 
 if __name__ == '__main__':

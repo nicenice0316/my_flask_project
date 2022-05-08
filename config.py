@@ -1,5 +1,6 @@
 JSON_AS_ASCII = False
 DEBUG = True
+SECRET_KEY = '77?1fj3n%='
 
 # 数据库配置
 HOSTNAME = '127.0.0.1'
