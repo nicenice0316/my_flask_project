@@ -21,3 +21,6 @@
 
 ## 五、session 和 cookie
 1.  在flask中，session是先把数据加密，然后用session_id作为key，存放到cookie中
+
+## 六、其他
+1.  css文件加载是用顺序的

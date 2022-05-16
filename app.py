@@ -1,12 +1,13 @@
 from flask import Flask
 import config
-from exts import db
+from exts import db, mail
 from blueprints import user_bp
 from blueprints import qa_bp
 
 app = Flask(__name__)
 app.config.from_object(config)
 db.init_app(app)
+mail.init_app(app)
 
 app.register_blueprint(user_bp)
 app.register_blueprint(qa_bp)
